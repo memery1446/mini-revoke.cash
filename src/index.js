@@ -1,14 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ChakraProvider, Box } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import App from "./App"; // ✅ Correct import
 
-const App = () => (
-  <ChakraProvider>
-    <Box p={4} maxW="400px" mx="auto" bg="gray.100">
-      <h1>Chakra UI (v2.8.0) ✅</h1>
-    </Box>
-  </ChakraProvider>
-);
+console.log("✅ React is running");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<React.StrictMode><App /></React.StrictMode>);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
