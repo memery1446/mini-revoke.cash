@@ -1,0 +1,12 @@
+.exit
+console.log("Deployed at:", await token.getAddress());
+await token.waitForDeployment(); // Ethers v6 requires this
+console.log("Contract Deploying...");
+const token = await Token.deploy();
+console.log("Factory Loaded ✅");
+const Token = await ethers.getContractFactory("TokenAllowanceManager");
+ require("ethers").version
+.exit
+await token.deployed();
+const token = await Token.deploy();
+const Token = await ethers.getContractFactory("TokenAllowanceManager");
