@@ -7,6 +7,7 @@ const TokenAllowanceManager = ({ wallet }) => {  // ✅ Receive wallet from App.
   const [allowance, setAllowance] = useState(null);
   const [selectedToken, setSelectedToken] = useState(CONTRACT_ADDRESSES.TK1);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // 🔄 Track transaction state
 
   useEffect(() => {
     console.log("✅ TokenAllowanceManager component is rendering");
@@ -28,6 +29,44 @@ const TokenAllowanceManager = ({ wallet }) => {  // ✅ Receive wallet from App.
     }
   };
 
+const setAllowanceAmount = async () => {
+  try {
+    console.log("🚀 setAllowance() called with:");
+    console.log("Token:", selectedToken);
+    console.log("Spender:", spender);
+    console.log("Wallet:", wallet);
+
+    if (!wallet || !spender || !selectedToken) {
+      alert("Enter a valid spender address.");
+      return;
+    }
+
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner(wallet);
+    const contract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, signer);
+
+    console.log("⏳ Sending transaction...");
+    const tx = await contract.setAllowance(
+      selectedToken,
+      spender,
+      parseUnits("100", 18)
+    );
+    console.log("✅ Transaction sent! Hash:", tx.hash);
+
+    await tx.wait(); // ✅ Wait for transaction to be mined
+    console.log("✅ Transaction confirmed in block!");
+
+    alert("✅ Allowance set to 100.");
+
+    checkAllowance(); // 🔄 Refresh UI
+  } catch (error) {
+    console.error("❌ Transaction failed:", error);
+    alert("❌ Error: " + error.message);
+  }
+};
+
+
+
   return (
     <div>
       {/* ✅ Render only if wallet is connected */}
@@ -46,6 +85,11 @@ const TokenAllowanceManager = ({ wallet }) => {  // ✅ Receive wallet from App.
 
           <input type="text" placeholder="Spender Address" onChange={(e) => setSpender(e.target.value)} />
           <button onClick={checkAllowance}>Check Allowance</button>
+          <div></div>
+          <button onClick={setAllowanceAmount} disabled={loading}>
+  {loading ? "Processing..." : "Set Allowance (100 Tokens)"}
+</button>
+
           <p>Allowance: {allowance || "N/A"}</p>
 
           {error && <p style={{ color: "red" }}>❌ {error}</p>}

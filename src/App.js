@@ -13,7 +13,7 @@ const App = () => {
   return (
     <ChakraProvider>
       <h1 style={{ textAlign: "center", marginTop: "20px" }}>
-        🚀 Minimal React Test Works
+        MINI REVOKE CASH
       </h1>
 
       {/* Pass setWallet to WalletConnect */}

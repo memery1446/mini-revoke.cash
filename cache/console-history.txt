@@ -1,3 +1,21 @@
+);
+  ethers.parseUnits("100", 18)
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",  
+  "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",  
+await TokenAllowanceManager.setAllowance(
+);
+  "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+  "TokenAllowanceManager",
+const TokenAllowanceManager = await ethers.getContractAt(
+);
+  ethers.parseUnits("100", 18)
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",  
+  "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",  
+await TokenAllowanceManager.setAllowance(
+);
+  "0x5fbdb2315678afecb367f032d93f642f64180aa3" // Make sure this is correct!
+  "TokenAllowanceManager",
+const TokenAllowanceManager = await ethers.getContractAt(
 .exit
 console.log("Deployed at:", await token.getAddress());
 await token.waitForDeployment(); // Ethers v6 requires this
