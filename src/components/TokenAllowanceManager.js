@@ -9,25 +9,39 @@ const TokenAllowanceManager = ({ wallet }) => {  // ✅ Receive wallet from App.
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // 🔄 Track transaction state
 
-  useEffect(() => {
-    console.log("✅ TokenAllowanceManager component is rendering");
-    console.log("💡 Wallet state:", wallet);
-  }, [wallet]); // ✅ Log when wallet updates
+useEffect(() => {
+  if (wallet && selectedToken && spender) {
+    console.log("🔄 Fetching allowance on component load...");
+    checkAllowance();
+  }
+}, [wallet, selectedToken, spender]); 
 
-  const checkAllowance = async () => {
-    try {
-      if (!wallet || !selectedToken || !spender) {
-        alert("Enter a spender address.");
-        return;
-      }
-      const provider = new BrowserProvider(window.ethereum);
-      const contract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, provider);
-      const value = await contract.getAllowance(selectedToken, wallet, spender);
-      setAllowance(formatUnits(value, 18));
-    } catch (err) {
-      setError(err.message);
+
+const checkAllowance = async () => {
+  try {
+    console.log("🔍 Checking allowance...");
+    console.log("Token:", selectedToken);
+    console.log("Wallet:", wallet);
+    console.log("Spender (Corrected):", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER); // ✅ Fix here
+
+    if (!wallet || !selectedToken || !CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER) {
+      alert("Enter a valid spender address.");
+      return;
     }
-  };
+
+    const provider = new BrowserProvider(window.ethereum);
+    const contract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, provider);
+
+    const value = await contract.getAllowance(selectedToken, wallet, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+    console.log("✅ Allowance fetched (Updated):", formatUnits(value, 18));
+
+    setAllowance(formatUnits(value, 18)); // ✅ Update UI
+  } catch (err) {
+    console.error("❌ Error fetching allowance:", err);
+  }
+};
+
+
 
 const setAllowanceAmount = async () => {
   try {
@@ -58,12 +72,17 @@ const setAllowanceAmount = async () => {
 
     alert("✅ Allowance set to 100.");
 
-    checkAllowance(); // 🔄 Refresh UI
+    console.log("🔄 Checking updated allowance...");
+    await checkAllowance();  // 🔄 Automatically refresh UI
+
+    console.log("✅ UI should now be updated!");
   } catch (error) {
     console.error("❌ Transaction failed:", error);
     alert("❌ Error: " + error.message);
   }
 };
+
+
 
 
 
@@ -84,7 +103,8 @@ const setAllowanceAmount = async () => {
           </select>
 
           <input type="text" placeholder="Spender Address" onChange={(e) => setSpender(e.target.value)} />
-          <button onClick={checkAllowance}>Check Allowance</button>
+          <button onClick={checkAllowance}>🔄 Refresh Allowance</button>
+
           <div></div>
           <button onClick={setAllowanceAmount} disabled={loading}>
   {loading ? "Processing..." : "Set Allowance (100 Tokens)"}

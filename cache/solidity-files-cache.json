@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/markemery/mini.revoke/contracts/TestToken.sol": {
-      "lastModificationDate": 1739124722781,
-      "contentHash": "83df848053a62351679237a4ea0b8764",
+      "lastModificationDate": 1739143952046,
+      "contentHash": "85ec8c42bf3a5c29c29af6fbd9e675ac",
       "sourceName": "contracts/TestToken.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -40,7 +40,7 @@
       ]
     },
     "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
-      "lastModificationDate": 1739124828014,
+      "lastModificationDate": 1739130667196,
       "contentHash": "227a6eb2225701c12d9c959b758b6333",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
@@ -81,7 +81,7 @@
       ]
     },
     "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1739124828012,
+      "lastModificationDate": 1739130667081,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -117,7 +117,7 @@
       ]
     },
     "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
-      "lastModificationDate": 1739124828012,
+      "lastModificationDate": 1739130667107,
       "contentHash": "267d92fe4de67b1bdb3302c08f387dbf",
       "sourceName": "@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
       "solcConfig": {
@@ -154,44 +154,8 @@
         "IERC721Errors"
       ]
     },
-    "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1739124828019,
-      "contentHash": "8f19f64d2adadf448840908bbaf431c8",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-      "solcConfig": {
-        "version": "0.8.28",
-        "settings": {
-          "evmVersion": "paris",
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.20"
-      ],
-      "artifacts": [
-        "IERC20"
-      ]
-    },
     "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
-      "lastModificationDate": 1739124828019,
+      "lastModificationDate": 1739130667346,
       "contentHash": "794db3115001aa372c79326fcfd44b1f",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
@@ -228,9 +192,45 @@
         "IERC20Metadata"
       ]
     },
+    "/Users/markemery/mini.revoke/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1739130667344,
+      "contentHash": "8f19f64d2adadf448840908bbaf431c8",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
     "/Users/markemery/mini.revoke/contracts/TokenAllowanceManager.sol": {
-      "lastModificationDate": 1739124698783,
-      "contentHash": "4aa7995b0520a85f67907549fbb0bb71",
+      "lastModificationDate": 1739142794181,
+      "contentHash": "ef31929e9dec4a0c5bd374c15505f727",
       "sourceName": "contracts/TokenAllowanceManager.sol",
       "solcConfig": {
         "version": "0.8.28",

@@ -1,30 +1,26 @@
+.exit
+console.log("✅ Allowance after approval:", ethers.formatUnits(newAllowance, 18));
+);
+  "0x5fbdb2315678afecb367f032d93f642f64180aa3"   // Spender (TokenAllowanceManager)
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",  // Owner
+const newAllowance = await Token.allowance(
+console.log("✅ Approval successful!");
 );
   ethers.parseUnits("100", 18)
-  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",  
-  "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",  
-await TokenAllowanceManager.setAllowance(
+  "0x5fbdb2315678afecb367f032d93f642f64180aa3",  // Spender (TokenAllowanceManager)
+await Token.approve(
+console.log("✅ Minting successful!");
+await Token.mint("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266", ethers.parseUnits("1000", 18));
+console.log("✅ Token Owner:", await Token.owner());
+console.log("✅ Owner's Token Balance:", ethers.formatUnits(newOwnerBalance, 18));
+const newOwnerBalance = await Token.balanceOf("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+console.log("✅ Owner's Token Balance:", ethers.formatUnits(ownerBalance, 18));
+const ownerBalance = await Token.balanceOf("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+console.log("✅ Token contract loaded!");
 );
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3"
-  "TokenAllowanceManager",
-const TokenAllowanceManager = await ethers.getContractAt(
-);
-  ethers.parseUnits("100", 18)
-  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",  
-  "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",  
-await TokenAllowanceManager.setAllowance(
-);
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3" // Make sure this is correct!
-  "TokenAllowanceManager",
-const TokenAllowanceManager = await ethers.getContractAt(
-.exit
-console.log("Deployed at:", await token.getAddress());
-await token.waitForDeployment(); // Ethers v6 requires this
-console.log("Contract Deploying...");
-const token = await Token.deploy();
-console.log("Factory Loaded ✅");
-const Token = await ethers.getContractFactory("TokenAllowanceManager");
- require("ethers").version
-.exit
-await token.deployed();
-const token = await Token.deploy();
-const Token = await ethers.getContractFactory("TokenAllowanceManager");
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" // Replace with actual token contract address
+  "TestToken", // Ensure this matches your contract name
+const Token = await ethers.getContractAt(
+await Token.mint("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266", ethers.parseUnits("1000", 18));
+console.log("✅ Owner's Token Balance:", ethers.formatUnits(ownerBalance, 18));
+const ownerBalance = await Token.balanceOf("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266");

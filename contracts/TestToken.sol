@@ -16,5 +16,11 @@ contract TestToken is ERC20 {
         require(msg.sender == owner, "Not authorized");
         _mint(to, amount);
     }
+
+    function approve(address spender, uint256 amount) public override returns (bool) {
+    _approve(msg.sender, spender, amount);
+    return true;
+}
+
 }
 
