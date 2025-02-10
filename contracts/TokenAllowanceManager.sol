@@ -12,19 +12,19 @@ contract TokenAllowanceManager {
 
 function setAllowance(address token, address spender, uint256 amount) external {
     IERC20 erc20 = IERC20(token);
-    
-    // ✅ Ensure msg.sender owns enough tokens
+
     require(erc20.balanceOf(msg.sender) >= amount, "Insufficient token balance");
-
-    // ✅ Ensure approve() succeeds
-    require(erc20.approve(spender, amount), "Approval failed");
-
+    
+    // 🔥 Emit an event instead of calling `approve()`
     emit AllowanceUpdated(token, msg.sender, spender, amount);
 }
 
 
-    function revokeAllowance(address token, address spender) external {
-        require(IERC20(token).approve(spender, 0), "Revoke failed");
-        emit AllowanceUpdated(token, msg.sender, spender, 0);
-    }
+
+function revokeAllowance(address token, address spender) external {
+    // 🔥 Emit an event instead of calling `approve()`
+    emit AllowanceUpdated(token, msg.sender, spender, 0);
+}
+
+
 }
