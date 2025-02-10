@@ -16,83 +16,72 @@ const TokenAllowanceManager = ({ wallet }) => {
     }
   }, [wallet, selectedToken, spender]);
 
-  const checkAllowance = async () => {
-    try {
-      console.log("🔍 Checking allowance...");
-      console.log("Token:", selectedToken);
-      console.log("Wallet:", wallet);
-      console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+const checkAllowance = async () => {
+  try {
+    console.log("🔍 Checking allowance...");
+    console.log("Token:", selectedToken);
+    console.log("Wallet:", wallet);
+    console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
 
-      if (!wallet || !selectedToken || !CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER) {
-        alert("Enter a valid spender address.");
-        return;
-      }
-
-      const provider = new BrowserProvider(window.ethereum);
-      const contract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, provider);
-
-      const value = await contract.getAllowance(selectedToken, wallet, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
-      console.log("✅ Allowance fetched:", formatUnits(value, 18));
-
-      setAllowance(formatUnits(value, 18));
-    } catch (err) {
-      console.error("❌ Error fetching allowance:", err);
+    if (!wallet || !selectedToken) {
+      alert("Please ensure wallet is connected and token is selected.");
+      return;
     }
-  };
 
-  const handleSetAllowance = async () => {
-    try {
-      console.log("🚀 Requesting token approval...");
+    const provider = new BrowserProvider(window.ethereum);
+    const tokenContract = new Contract(selectedToken, TOKEN_ABI, provider);
 
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner(wallet);
-      const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
+    const value = await tokenContract.allowance(wallet, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+    console.log("✅ Allowance fetched:", formatUnits(value, 18));
 
-      // 🔥 Directly call approve() from the wallet
-      const tx = await tokenContract.approve(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, parseUnits("100", 18));
-      await tx.wait();
-      console.log("✅ Token approval confirmed!");
+    setAllowance(formatUnits(value, 18));
+  } catch (err) {
+    console.error("❌ Error fetching allowance:", err);
+  }
+};
 
-      // 🔥 Now call `setAllowance()`
-      const allowanceContract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, signer);
-      await allowanceContract.setAllowance(selectedToken, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, parseUnits("100", 18));
-      console.log("✅ Allowance updated in contract!");
+const handleSetAllowance = async () => {
+  try {
+    console.log("🚀 Requesting token approval...");
 
-      checkAllowance();
-    } catch (error) {
-      console.error("❌ Error setting allowance:", error);
-    }
-  };
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner(wallet);
+    const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
 
-  const handleRevokeAllowance = async () => {
-    try {
-      console.log("🚨 Revoking allowance...");
-      console.log("Token:", selectedToken);
-      console.log("Wallet:", wallet);
-      console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+    // Just do the direct token approval
+    const tx = await tokenContract.approve(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, parseUnits("100", 18));
+    await tx.wait();
+    console.log("✅ Token approval confirmed!");
 
-      if (!wallet || !selectedToken || !CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER) {
-        alert("Enter a valid spender address.");
-        return;
-      }
+    // Remove the second call to setAllowance() and just check the result
+    checkAllowance();
+  } catch (error) {
+    console.error("❌ Error setting allowance:", error);
+  }
+};
 
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner(wallet);
-      const contract = new Contract(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, TOKEN_ALLOWANCE_MANAGER_ABI, signer);
+const handleRevokeAllowance = async () => {
+  try {
+    console.log("🚨 Revoking allowance...");
+    console.log("Token:", selectedToken);
+    console.log("Wallet:", wallet);
+    console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
 
-      const tx = await contract.revokeAllowance(selectedToken, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
-      console.log("⏳ Transaction sent! Hash:", tx.hash);
+    const provider = new BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner(wallet);
+    const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
 
-      await tx.wait();
-      console.log("✅ Allowance revoked!");
+    // Directly set allowance to 0
+    const tx = await tokenContract.approve(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, 0);
+    await tx.wait();
+    console.log("✅ Allowance revoked!");
 
-      alert("✅ Allowance successfully revoked!");
-      checkAllowance();
-    } catch (error) {
-      console.error("❌ Transaction failed:", error);
-      alert("❌ Error: " + error.message);
-    }
-  };
+    checkAllowance();
+  } catch (error) {
+    console.error("❌ Transaction failed:", error);
+    alert("❌ Error: " + error.message);
+  }
+};
 
   return (
     <div>

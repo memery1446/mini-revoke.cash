@@ -5,12 +5,6 @@ async function main() {
 
   console.log(`🚀 Deploying with: ${deployer.address}`);
 
-  // Deploy TokenAllowanceManager
-  const TokenAllowanceManager = await hre.ethers.getContractFactory("TokenAllowanceManager");
-  const manager = await TokenAllowanceManager.deploy();
-  await manager.waitForDeployment();
-  console.log(`TokenAllowanceManager deployed at: ${await manager.getAddress()}`);
-
   // Deploy Two ERC-20 Test Tokens
   const TestToken = await hre.ethers.getContractFactory("TestToken");
   const tk1 = await TestToken.deploy("Test Token 1", "TK1", 18);
