@@ -229,8 +229,8 @@
       ]
     },
     "/Users/markemery/mini.revoke/contracts/TokenAllowanceManager.sol": {
-      "lastModificationDate": 1739145433187,
-      "contentHash": "7f4e9ec0ea310a871a73275dedf72170",
+      "lastModificationDate": 1739146685166,
+      "contentHash": "91018cda4f0b3a9797031be3b7480cf7",
       "sourceName": "contracts/TokenAllowanceManager.sol",
       "solcConfig": {
         "version": "0.8.28",

@@ -1,37 +1,45 @@
 .exit
-console.log(await Token._allowances);
-console.log("✅ Checking Token Storage Layout...");
-console.log("✅ Token Contract ABI:", Token.interface.fragments);
+console.log("✅ Allowance Directly from Storage:", storageAllowance);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+const storageAllowance = await provider.send("eth_getStorageAt", [
+console.log("✅ Token ABI Functions:", Token.interface.fragments.map(f => f.name));
+console.log("✅ Token Contract Address:", Token.target);
+console.log("✅ Allowance from contract (Verification):", ethers.formatUnits(freshVerifiedAllowance, 18));
+);
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+const freshVerifiedAllowance = await Token.allowance(
 console.log("✅ Allowance from contract (Verification):", ethers.formatUnits(verifiedAllowance, 18));
 );
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
 const verifiedAllowance = await Token.allowance(
-console.log("✅ Token Functions:", await Token.functions);
-console.log("✅ Allowance from Storage:", ethers.formatUnits(newAllowanceValue, 18));
-const newAllowanceValue = ethers.toBigInt(newAllowanceRaw);
+console.log("✅ Token contract reloaded!");
+);
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" // Token contract address
+  "TestToken",  // Ensure this matches your contract name
+const Token = await ethers.getContractAt(
+console.log("✅ Allowance from contract (Verification):", ethers.formatUnits(verifiedAllowance, 18));
+);
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+const verifiedAllowance = await Token.allowance(
+console.log("✅ Storage Allowance (Raw):", freshAllowanceRaw);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+const freshAllowanceRaw = await provider.send("eth_getStorageAt", [
 console.log("✅ Storage Allowance (Raw):", newAllowanceRaw);
 ]);
   "latest"
   allowanceSlot,
-  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",  // Token contract address
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
 const newAllowanceRaw = await provider.send("eth_getStorageAt", [
-console.log("✅ Storage Allowance (Raw):", allowanceRaw);
-]);
-  "latest"
-  allowanceSlot,
-  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",  // Token contract address
-const allowanceRaw = await provider.send("eth_getStorageAt", [
-const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
-console.log("✅ Allowance from Storage:", ethers.formatUnits(allowanceValue, 18));
-const allowanceValue = ethers.toBigInt(allowanceRaw);
-// Convert to readable format
-console.log("✅ Storage Allowance (Raw):", allowanceRaw);
-);
-  allowanceSlot
-  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", 
-const allowanceRaw = await ethers.provider.getStorageAt(
-// Fetch the allowance from storage
+console.log("✅ Computed Allowance Slot:", allowanceSlot);
 );
   )
     [spender, ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], [owner, slot]))]
@@ -39,36 +47,75 @@ const allowanceRaw = await ethers.provider.getStorageAt(
   ethers.AbiCoder.defaultAbiCoder().encode(
 const allowanceSlot = ethers.keccak256(
 // Compute correct storage slot
-const slot = 2;  // ERC-20 allowances are usually stored in slot 2
-const spender = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+const slot = 2;  // ERC-20 allowances are usually mapped from this slot
+const spender = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 const owner = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
-console.log("✅ Allowance after manual approval:", ethers.formatUnits(freshAllowance, 18));
+console.log("✅ Storage Allowance (Raw):", newAllowanceRaw);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+const newAllowanceRaw = await provider.send("eth_getStorageAt", [
+const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+.exit
+console.log("✅ Allowance from Storage:", ethers.formatUnits(newAllowanceValue, 18));
+const newAllowanceValue = ethers.toBigInt(newAllowanceRaw);
+console.log("✅ Storage Allowance (Raw):", newAllowanceRaw);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+const newAllowanceRaw = await provider.send("eth_getStorageAt", [
+console.log("✅ Storage Allowance (Raw):", allowanceRaw);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+const allowanceRaw = await provider.send("eth_getStorageAt", [
+console.log("✅ Computed Allowance Slot:", allowanceSlot);
 );
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3"  // Spender (TokenAllowanceManager)
-  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266", // Owner
+  )
+    [spender, ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["address", "uint256"], [owner, slot]))]
+    ["address", "uint256"],
+  ethers.AbiCoder.defaultAbiCoder().encode(
+const allowanceSlot = ethers.keccak256(
+// Compute correct storage slot
+const slot = 2;  // ERC-20 allowances are usually mapped from this slot
+const spender = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const owner = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+console.log("✅ Storage Allowance (Raw):", allowanceRaw);
+]);
+  "latest"
+  allowanceSlot,
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",  // Token contract address
+const allowanceRaw = await provider.send("eth_getStorageAt", [
+const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+console.log("✅ Token ABI Functions:", Token.interface.fragments.map(f => f.name));
+console.log("✅ Token Contract Address:", Token.target);
+console.log("✅ Allowance after manual revoke:", ethers.formatUnits(freshAllowance, 18));
+);
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
 const freshAllowance = await Token.allowance(
-console.log("✅ Allowance after manual approval:", ethers.formatUnits(updatedAllowance, 18));
+console.log("✅ Allowance after manual revoke:", ethers.formatUnits(updatedAllowance, 18));
 );
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3"  // Spender (TokenAllowanceManager)
-  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266", // Owner
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
 const updatedAllowance = await Token.allowance(
-console.log("✅ Manual approval successful!");
+console.log("✅ Allowance manually set to 0");
 );
-  ethers.parseUnits("100", 18)
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  0
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3",
 await Token.approve(
 console.log("✅ Token contract loaded!");
 );
-  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" // Replace with actual deployed token address
-  "TestToken", // Ensure this matches your contract name
+  "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512" // Token contract address
+  "TestToken",  // Ensure this matches your contract name
 const Token = await ethers.getContractAt(
-console.log("✅ Allowance after manual approval:", ethers.formatUnits(updatedAllowance, 18));
+console.log("✅ Allowance after manual revoke:", ethers.formatUnits(updatedAllowance, 18));
 );
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
 const updatedAllowance = await Token.allowance(
-console.log("✅ Manual approval successful!");
-);
-  ethers.parseUnits("100", 18)
-  "0x5fbdb2315678afecb367f032d93f642f64180aa3",
-await Token.approve(
+console.log("✅ Allowance manually set to 0");
+await Token.approve("0x5FbDB2315678afecb367f032d93F642f64180aa3", 0);

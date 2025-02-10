@@ -22,9 +22,15 @@ function setAllowance(address token, address spender, uint256 amount) external {
 
 
 function revokeAllowance(address token, address spender) external {
-    // 🔥 Emit an event instead of calling `approve()`
+    IERC20 erc20 = IERC20(token);
+
+    // 🔥 First, reset to 0 before revoking
+    require(erc20.allowance(msg.sender, spender) > 0, "No allowance to revoke");
+    require(erc20.approve(spender, 0), "Approval reset to 0 failed");
+
     emit AllowanceUpdated(token, msg.sender, spender, 0);
 }
+
 
 
 }
