@@ -70,6 +70,73 @@ async function revokeERC1155Approval(nftContractAddress, signer) {
     console.log(`✅ ERC-1155 Approval Revoked`);
 }
 
+/** Function to batch revoke ERC-20 approvals */
+async function batchRevokeERC20Approvals(tokenContractAddresses, signer) {
+    const abi = ["function approve(address spender, uint256 amount)"];
+    
+    console.log("⏳ Revoking multiple ERC-20 approvals...");
+    
+    for (let tokenAddress of tokenContractAddresses) {
+        const contract = new ethers.Contract(tokenAddress, abi, signer);
+
+        const tx = await contract.approve(ethers.ZeroAddress, 0); // ✅ Set allowance to zero
+        await tx.wait();
+
+        console.log(`✅ ERC-20 Approval Revoked for: ${tokenAddress}`);
+    }
+
+    console.log("✅ All ERC-20 approvals revoked!");
+}
+
+/** Function to batch revoke ERC-721 approvals */
+async function batchRevokeERC721Approvals(nftContractAddress, signer, tokenIds) {
+    const abi = ["function batchRevokeApprovals(uint256[] memory tokenIds)"];
+    const contract = new ethers.Contract(nftContractAddress, abi, signer);
+
+    console.log("⏳ Revoking multiple ERC-721 approvals...");
+    
+    const tx = await contract.batchRevokeApprovals(tokenIds);
+    await tx.wait();
+
+    console.log(`✅ ERC-721 Approvals Revoked for tokens: ${tokenIds.join(", ")}`);
+}
+
+/** Function to batch revoke ERC-1155 approvals */
+async function batchRevokeERC1155Approvals(nftContractAddress, signer) {
+    const abi = [
+        "function isApprovedForAll(address owner, address operator) view returns (bool)",
+        "function setApprovalForAll(address operator, bool approved)"
+    ];
+    const contract = new ethers.Contract(nftContractAddress, abi, signer);
+    
+    const ownerAddress = await signer.getAddress();
+    const knownOperators = [
+        "0xMarketplace1", "0xMarketplace2"
+    ]; // ✅ Add known marketplaces
+
+    console.log("⏳ Checking current ERC-1155 approvals...");
+
+    const approvedOperators = [];
+    for (let operator of knownOperators) {
+        const isApproved = await contract.isApprovedForAll(ownerAddress, operator);
+        if (isApproved) approvedOperators.push(operator);
+    }
+
+    if (approvedOperators.length === 0) {
+        console.log("✅ No active approvals found for ERC-1155 tokens. Skipping revocation.");
+        return;
+    }
+
+    console.log(`⏳ Revoking ERC-1155 approvals for: ${approvedOperators.join(", ")}`);
+
+    for (let operator of approvedOperators) {
+        const tx = await contract.setApprovalForAll(operator, false);
+        await tx.wait();
+        console.log(`✅ Revoked approval for: ${operator}`);
+    }
+
+    console.log("✅ All ERC-1155 approvals revoked!");
+}
 
 /** Main Function to Run Tests */
 async function main() {
