@@ -3,8 +3,9 @@ const hre = require("hardhat");
 async function main() {
   const [deployer, account1] = await hre.ethers.getSigners();
 
-  console.log(`🚀 Deploying with: ${deployer.address}`);
-  console.log(`Deploying TestNFT with the account: ${deployer.address}`);
+  console.log(`🚀 Deploying TestTK's with: ${deployer.address}`);
+  console.log(`Deploying TestNFT with: ${deployer.address}`);
+  console.log(`🚀 Deploying TestERC1155 with: ${deployer.address}`);
 
   // Deploy Two ERC-20 Test Tokens
   const TestToken = await hre.ethers.getContractFactory("TestToken");
@@ -21,6 +22,12 @@ async function main() {
   const testNFT = await TestNFT.deploy();
   await testNFT.waitForDeployment(); // ✅ Fix: Use `waitForDeployment()`
   console.log(`TestNFT deployed at: ${await testNFT.getAddress()}`); // ✅ Fix: Use `getAddress()`
+
+    // Deploy ERC-1155 Contract
+  const TestERC1155 = await hre.ethers.getContractFactory("TestERC1155");
+  const testERC1155 = await TestERC1155.deploy(deployer.address);
+  await testERC1155.waitForDeployment();
+  console.log(`TestERC1155 deployed at: ${await testERC1155.getAddress()}`);
 
   // Mint tokens to the deployer BEFORE any transfers
   await tk1.mint(deployer.address, hre.ethers.parseUnits("5000", 18));
