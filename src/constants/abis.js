@@ -1,7 +1,7 @@
-const { abi: tokenAllowanceManagerABI } = require('../artifacts/contracts/TokenAllowanceManager.sol/TokenAllowanceManager.json');
+
 const { abi: testTokenABI } = require('../artifacts/contracts/TestToken.sol/TestToken.json');
 
-export const TOKEN_ALLOWANCE_MANAGER_ABI = tokenAllowanceManagerABI;
+
 export const TOKEN_ABI = testTokenABI;
 
 export const CONTRACT_ADDRESSES = {
