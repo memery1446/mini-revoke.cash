@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserProvider } from "ethers"; // ✅ Ensure correct import
+import { BrowserProvider, Contract, ZeroAddress } from "ethers"; // ✅ Ensure correct import
 import { getERC721Approvals, revokeERC721Approval } from "../utils/nftApprovals"; // ✅ Import functions
 
 const NFTApprovals = ({ contractAddress }) => {
