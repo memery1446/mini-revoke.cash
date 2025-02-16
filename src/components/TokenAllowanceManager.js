@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { BrowserProvider, Contract, parseUnits, formatUnits } from "ethers";
-import { CONTRACT_ADDRESSES, TOKEN_ALLOWANCE_MANAGER_ABI, TOKEN_ABI } from "../constants/abis";
+import { CONTRACT_ADDRESSES, TOKEN_ABI } from "../constants/abis";
 
 const TokenAllowanceManager = ({ wallet }) => {
   const [spender, setSpender] = useState("");
   const [allowance, setAllowance] = useState(null);
   const [selectedToken, setSelectedToken] = useState(CONTRACT_ADDRESSES.TK1);
-  const [error, setError] = useState("");
+  const [customAmount, setCustomAmount] = useState(""); // ✅ Allow users to set an amount
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -16,108 +16,122 @@ const TokenAllowanceManager = ({ wallet }) => {
     }
   }, [wallet, selectedToken, spender]);
 
-const checkAllowance = async () => {
-  try {
-    console.log("🔍 Checking allowance...");
-    console.log("Token:", selectedToken);
-    console.log("Wallet:", wallet);
-    console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+  const checkAllowance = async () => {
+    try {
+      console.log("🔍 Checking allowance...");
+      if (!wallet || !selectedToken || !spender) {
+        alert("Please ensure wallet is connected and spender is set.");
+        return;
+      }
 
-    if (!wallet || !selectedToken) {
-      alert("Please ensure wallet is connected and token is selected.");
-      return;
+      const provider = new BrowserProvider(window.ethereum);
+      const tokenContract = new Contract(selectedToken, TOKEN_ABI, provider);
+
+      const value = await tokenContract.allowance(wallet, spender);
+      setAllowance(formatUnits(value, 18));
+      console.log("✅ Allowance fetched:", formatUnits(value, 18));
+    } catch (err) {
+      console.error("❌ Error fetching allowance:", err);
     }
+  };
 
-    const provider = new BrowserProvider(window.ethereum);
-    const tokenContract = new Contract(selectedToken, TOKEN_ABI, provider);
+  const handleSetAllowance = async () => {
+    try {
+      if (!customAmount || isNaN(customAmount) || parseFloat(customAmount) <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
 
-    const value = await tokenContract.allowance(wallet, CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
-    console.log("✅ Allowance fetched:", formatUnits(value, 18));
+      console.log(`🚀 Requesting token approval for ${customAmount} tokens...`);
+      setLoading(true);
 
-    setAllowance(formatUnits(value, 18));
-  } catch (err) {
-    console.error("❌ Error fetching allowance:", err);
-  }
-};
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner(wallet);
+      const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
 
-const handleSetAllowance = async () => {
-  try {
-    console.log("🚀 Requesting token approval...");
+      const tx = await tokenContract.approve(spender, parseUnits(customAmount, 18));
+      await tx.wait();
+      console.log("✅ Token approval confirmed!");
 
-    const provider = new BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner(wallet);
-    const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
+      checkAllowance();
+    } catch (error) {
+      console.error("❌ Error setting allowance:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // Just do the direct token approval
-    const tx = await tokenContract.approve(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, parseUnits("100", 18));
-    await tx.wait();
-    console.log("✅ Token approval confirmed!");
+  const handleRevokeAllowance = async () => {
+    try {
+      console.log("🚨 Revoking allowance...");
+      if (!spender) {
+        alert("Please enter a spender address.");
+        return;
+      }
 
-    // Remove the second call to setAllowance() and just check the result
-    checkAllowance();
-  } catch (error) {
-    console.error("❌ Error setting allowance:", error);
-  }
-};
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner(wallet);
+      const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
 
-const handleRevokeAllowance = async () => {
-  try {
-    console.log("🚨 Revoking allowance...");
-    console.log("Token:", selectedToken);
-    console.log("Wallet:", wallet);
-    console.log("Spender:", CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER);
+      const tx = await tokenContract.approve(spender, 0);
+      await tx.wait();
+      console.log("✅ Allowance revoked!");
 
-    const provider = new BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner(wallet);
-    const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
-
-    // Directly set allowance to 0
-    const tx = await tokenContract.approve(CONTRACT_ADDRESSES.TOKEN_ALLOWANCE_MANAGER, 0);
-    await tx.wait();
-    console.log("✅ Allowance revoked!");
-
-    checkAllowance();
-  } catch (error) {
-    console.error("❌ Transaction failed:", error);
-    alert("❌ Error: " + error.message);
-  }
-};
+      checkAllowance();
+    } catch (error) {
+      console.error("❌ Transaction failed:", error);
+      alert("❌ Error: " + error.message);
+    }
+  };
 
   return (
-    <div>
+    <div className="p-3 border rounded bg-light">
       {wallet ? (
         <>
-          <h3>Wallet Connected: {wallet}</h3>
+          <h3 className="text-primary">Wallet Connected: {wallet}</h3>
           <select
-            onChange={(e) => {
-              setSelectedToken(e.target.value);
-              console.log("Selected token:", e.target.value);
-            }}
+            className="form-select my-2"
+            onChange={(e) => setSelectedToken(e.target.value)}
           >
             <option value={CONTRACT_ADDRESSES.TK1}>Test Token 1 (TK1)</option>
             <option value={CONTRACT_ADDRESSES.TK2}>Test Token 2 (TK2)</option>
           </select>
 
-          <input type="text" placeholder="Spender Address" onChange={(e) => setSpender(e.target.value)} />
-          <button onClick={checkAllowance}>🔄 Refresh Allowance</button>
+          <input
+            type="text"
+            className="form-control my-2"
+            placeholder="Spender Address"
+            onChange={(e) => setSpender(e.target.value)}
+          />
 
-          <div></div>
-          <button onClick={handleSetAllowance} disabled={loading}>
-            {loading ? "Processing..." : "Set Allowance (100 Tokens)"}
+          <button className="btn btn-secondary w-100 my-2" onClick={checkAllowance}>
+            🔄 Refresh Allowance
           </button>
-          <button onClick={handleRevokeAllowance} style={{ backgroundColor: "red", color: "white" }}>
+
+          {/* ✅ New: User-defined amount for approval */}
+          <input
+            type="number"
+            className="form-control my-2"
+            placeholder="Enter amount to approve"
+            onChange={(e) => setCustomAmount(e.target.value)}
+          />
+
+          <button className="btn btn-primary w-100 my-2" onClick={handleSetAllowance} disabled={loading}>
+            {loading ? "Processing..." : "Set Allowance"}
+          </button>
+
+          <button className="btn btn-danger w-100 my-2" onClick={handleRevokeAllowance}>
             🚨 Revoke Allowance
           </button>
 
-          <p>Allowance: {allowance || "N/A"}</p>
-
-          {error && <p style={{ color: "red" }}>❌ {error}</p>}
+          <p className="fw-bold">Allowance: {allowance !== null ? `${allowance} Tokens` : "N/A"}</p>
         </>
       ) : (
-        <p>🔴 Please connect your wallet first.</p>
+        <p className="text-danger">🔴 Please connect your wallet first.</p>
       )}
     </div>
   );
 };
 
 export default TokenAllowanceManager;
+
