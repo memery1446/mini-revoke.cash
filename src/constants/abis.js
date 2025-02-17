@@ -6,11 +6,50 @@ module.exports = {
     TOKEN_ABI: testTokenABI,
     NFT_ABI: testNFTABI,
     ERC1155_ABI: testERC1155ABI,
+    
     CONTRACT_ADDRESSES: {
-        TK1: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        TK2: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-        TestNFT: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-        TestERC1155: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+        TK1: "0x6D39d71fF4ab56a4873febd34e1a3BDefc01b41e",
+        TK2: "0x70e754531418461eF2366b72cd396337d2AD6D5d",
+        TestNFT: "0xeF66010868Ff77119171628B7eFa0F6179779375",
+        TestERC1155: "0xd544d7A5EF50c510f3E90863828EAba7E392907A"
+    },
+
+    NETWORK_CONFIG: {
+        31337: {
+            name: "Hardhat Local Fork",
+            rpcUrl: "http://127.0.0.1:8545",
+            contracts: {
+                tokenManager: "0x6D39d71fF4ab56a4873febd34e1a3BDefc01b41e",
+                erc721: "0xeF66010868Ff77119171628B7eFa0F6179779375",
+                erc1155: "0xd544d7A5EF50c510f3E90863828EAba7E392907A"
+            }
+        },
+        1: {
+            name: "Ethereum Mainnet",
+            rpcUrl: "https://eth-mainnet.alchemyapi.io/v2/YOUR_ALCHEMY_API_KEY",
+            contracts: {
+                tokenManager: "0xYourEthereumTokenManager",
+                erc721: "0xYourEthereumERC721",
+                erc1155: "0xYourEthereumERC1155"
+            }
+        },
+        56: {
+            name: "Binance Smart Chain",
+            rpcUrl: "https://bsc-dataseed.binance.org/",
+            contracts: {
+                tokenManager: "0xYourBSCManager",
+                erc721: "0xYourBSCERC721",
+                erc1155: "0xYourBSCERC1155"
+            }
+        },
+        137: {
+            name: "Polygon",
+            rpcUrl: "https://polygon-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY",
+            contracts: {
+                tokenManager: "0xYourPolygonTokenManager",
+                erc721: "0xYourPolygonERC721",
+                erc1155: "0xYourPolygonERC1155"
+            }
+        }
     }
 };
-
