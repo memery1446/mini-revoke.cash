@@ -1,58 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { BrowserProvider } from "ethers"; // ✅ Correct import for Ethers v6
-import { getERC1155Approvals, revokeERC1155Approval } from "../utils/erc1155Approvals"; // ✅ Import utility functions
+import { ethers } from "ethers";
 
 const ERC1155Approvals = ({ contractAddress }) => {
-    const [isApproved, setIsApproved] = useState(null);
+  const [approvals, setApprovals] = useState(null);
 
-    useEffect(() => {
-        const fetchApprovalStatus = async () => {
-            if (!window.ethereum) {
-                console.error("❌ MetaMask (or another wallet) is not installed!");
-                return;
-            }
+  useEffect(() => {
+    if (contractAddress && window.ethereum) {
+      fetchApprovalStatus();
+    }
+  }, [contractAddress]);
 
-            try {
-                const provider = new BrowserProvider(window.ethereum); // ✅ Corrected reference
-                const signer = await provider.getSigner();
-                const ownerAddress = await signer.getAddress();
+  const fetchApprovalStatus = async () => {
+    try {
+      console.log("🔍 Fetching ERC-1155 approvals for contract:", contractAddress);
+      if (!contractAddress) throw new Error("❌ Contract address is missing!");
 
-                const approvalStatus = await getERC1155Approvals(contractAddress, ownerAddress, provider);
-                setIsApproved(approvalStatus);
-            } catch (error) {
-                console.error("❌ Error fetching ERC-1155 approvals:", error);
-            }
-        };
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const abi = ["function isApprovedForAll(address owner, address operator) view returns (bool)"];
+      const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        fetchApprovalStatus();
-    }, [contractAddress]);
+      const isApprovedForAll = await contract.isApprovedForAll(
+        await signer.getAddress(),
+        "0x0000000000000000000000000000000000000000"
+      );
 
-    /** Handle Revoking Approval */
-    const handleRevoke = async () => {
-        await revokeERC1155Approval(contractAddress);
-        alert("Approval Revoked! Refreshing data...");
-        window.location.reload();
-    };
+      console.log("✅ ERC-1155 Approvals:", isApprovedForAll);
+      setApprovals(isApprovedForAll);
+    } catch (error) {
+      console.error("❌ Error fetching ERC-1155 approvals:", error);
+    }
+  };
 
-    return (
-        <div>
-            <h2>ERC-1155 Approvals</h2>
-            {isApproved !== null ? (
-                <ul>
-                    <li>Global Approval: {isApproved ? "✅ Yes" : "❌ No"}</li>
-                </ul>
-            ) : (
-                <p>Loading approvals...</p>
-            )}
-
-            {isApproved && (
-                <button onClick={handleRevoke} style={{ marginTop: "10px", padding: "10px" }}>
-                    Revoke Approval
-                </button>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      <h3>ERC-1155 Approvals</h3>
+      <p>{approvals !== null ? `Approved: ${approvals}` : "Fetching..."}</p>
+    </div>
+  );
 };
 
 export default ERC1155Approvals;
-

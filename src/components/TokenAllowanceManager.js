@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserProvider, Contract, parseUnits, formatUnits } from "ethers";
+import { ethers } from "ethers"; // ✅ Corrected import
 import { CONTRACT_ADDRESSES, TOKEN_ABI } from "../constants/abis";
 
 const TokenAllowanceManager = ({ wallet }) => {
@@ -24,12 +24,12 @@ const TokenAllowanceManager = ({ wallet }) => {
         return;
       }
 
-      const provider = new BrowserProvider(window.ethereum);
-      const tokenContract = new Contract(selectedToken, TOKEN_ABI, provider);
+      const provider = new ethers.providers.Web3Provider(window.ethereum); // ✅ Use ethers.providers.Web3Provider
+      const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, provider);
 
       const value = await tokenContract.allowance(wallet, spender);
-      setAllowance(formatUnits(value, 18));
-      console.log("✅ Allowance fetched:", formatUnits(value, 18));
+      setAllowance(ethers.utils.formatUnits(value, 18)); // ✅ Corrected formatUnits usage
+      console.log("✅ Allowance fetched:", ethers.utils.formatUnits(value, 18));
     } catch (err) {
       console.error("❌ Error fetching allowance:", err);
     }
@@ -45,11 +45,11 @@ const TokenAllowanceManager = ({ wallet }) => {
       console.log(`🚀 Requesting token approval for ${customAmount} tokens...`);
       setLoading(true);
 
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner(wallet);
-      const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, signer);
 
-      const tx = await tokenContract.approve(spender, parseUnits(customAmount, 18));
+      const tx = await tokenContract.approve(spender, ethers.utils.parseUnits(customAmount, 18)); // ✅ Corrected parseUnits usage
       await tx.wait();
       console.log("✅ Token approval confirmed!");
 
@@ -69,9 +69,9 @@ const TokenAllowanceManager = ({ wallet }) => {
         return;
       }
 
-      const provider = new BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner(wallet);
-      const tokenContract = new Contract(selectedToken, TOKEN_ABI, signer);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, signer);
 
       const tx = await tokenContract.approve(spender, 0);
       await tx.wait();
@@ -134,4 +134,3 @@ const TokenAllowanceManager = ({ wallet }) => {
 };
 
 export default TokenAllowanceManager;
-

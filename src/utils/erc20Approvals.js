@@ -1,4 +1,4 @@
-import { BrowserProvider, Contract } from "ethers";
+import { ethers, Contract } from "ethers";
 
 /** Function to get ERC-20 Approvals */
 export async function getERC20Approvals(tokenContracts, ownerAddress, provider) {

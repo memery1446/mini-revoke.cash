@@ -1,4 +1,4 @@
-import { BrowserProvider, Contract } from "ethers"; // ✅ Correct import
+import { ethers, Contract } from "ethers"; // ✅ Correct import
 
 /** Function to get ERC-1155 Approvals */
 export async function getERC1155Approvals(nftContractAddress, ownerAddress, provider) {

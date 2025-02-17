@@ -1,4 +1,6 @@
-import { BrowserProvider, Contract, ZeroAddress } from "ethers"; // ✅ Updated for Ethers v6
+import { ethers, Contract } from "ethers"; // ✅ Updated for Ethers v6
+const ZeroAddress = "0x0000000000000000000000000000000000000000";
+
 
 /** Function to get ERC-721 Approvals */
 export async function getERC721Approvals(nftContractAddress, ownerAddress, provider) {
