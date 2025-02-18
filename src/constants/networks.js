@@ -7,6 +7,7 @@ export const NETWORK_CONFIG = {
       secondToken: "0xeF66010868Ff77119171628B7eFa0F6179779375",  // ✅ TK2
       erc721: "0xd544d7A5EF50c510f3E90863828EAba7E392907A",  // ✅ Updated NFT
       erc1155: "0x103416cfCD0D0a32b904Ab4fb69dF6E5B5aaDf2b"   // ✅ Updated ERC1155
+      MockSpender: "0xYourDeployedMockSpenderAddress"
     }
   },
   1: {
