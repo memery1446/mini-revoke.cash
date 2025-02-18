@@ -1,21 +1,24 @@
-import React from "react";
-import { batchRevokeERC20Approvals } from "../utils/erc20Approvals";
-import { batchRevokeERC721Approvals } from "../utils/nftApprovals";
-import { batchRevokeERC1155Approvals } from "../utils/erc1155Approvals";
+import { ethers } from "ethers";
 
-const BatchRevoke = ({ erc20Contracts, erc721Contract, erc1155Contract, signer }) => {
-    const handleBatchRevoke = async () => {
-        await batchRevokeERC20Approvals(erc20Contracts, signer);
-        await batchRevokeERC721Approvals(erc721Contract, signer, [1, 2, 3]); // Example token IDs
-        await batchRevokeERC1155Approvals(erc1155Contract, signer);
-        alert("All approvals revoked!");
-    };
+/** Function to batch revoke ERC-20 approvals */
+export async function batchRevokeERC20Approvals(tokenContracts, signer) {
+    const abi = ["function approve(address spender, uint256 amount)"];
 
-    return (
-        <button onClick={handleBatchRevoke} style={{ marginTop: "10px", padding: "10px" }}>
-            Revoke All Approvals
-        </button>
-    );
-};
+    console.log("⏳ Revoking multiple ERC-20 approvals...");
 
-export default BatchRevoke;
+    for (let tokenAddress of tokenContracts) {
+        if (!ethers.utils.isAddress(tokenAddress)) {
+            console.error(`❌ Invalid token address for revoking: ${tokenAddress}`);
+            continue;
+        }
+
+        try {
+            const contract = new ethers.Contract(tokenAddress, abi, signer);
+            const tx = await contract.approve("0x0000000000000000000000000000000000000000", 0);
+            await tx.wait();
+            console.log(`✅ Revoked approval for ${tokenAddress}`);
+        } catch (error) {
+            console.error(`❌ Error revoking approval for ${tokenAddress}:`, error);
+        }
+    }
+}
