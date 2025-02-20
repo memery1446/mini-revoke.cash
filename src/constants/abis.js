@@ -9,10 +9,10 @@ module.exports = {
     
     CONTRACT_ADDRESSES: {
         TK1: "0xeF66010868Ff77119171628B7eFa0F6179779375",  // ✅ Updated TK1
-        TK2: "0xd544d7A5EF50c510f3E90863828EAba7E392907A",  // ✅ Updated TK2
+        TK2: "0xd544d7a5ef50c510f3e90863828eaba7e392907a",  // ✅ Updated TK2
         TestNFT: "0x103416cfCD0D0a32b904Ab4fb69dF6E5B5aaDf2b",  // ✅ Updated NFT
-        TestERC1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD",  // ✅ Updated ERC1155
-        MockSpender: "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC"
+        TestERC1155: "0x1f585372f116e1055af2bed81a808ddf9638dccd",  // ✅ Updated ERC1155
+        MockSpender: "0x43c5df0c482c88cef8005389f64c362ee720a5bc"
     },
 
     NETWORK_CONFIG: {
@@ -21,10 +21,10 @@ module.exports = {
             rpcUrl: "http://127.0.0.1:8545",
             contracts: {
                 tokenManager: "0xeF66010868Ff77119171628B7eFa0F6179779375",  // ✅ TK1
-                secondToken: "0xd544d7A5EF50c510f3E90863828EAba7E392907A",  // ✅ TK2
+                secondToken: "0xd544d7a5ef50c510f3e90863828eaba7e392907a",  // ✅ TK2
                 erc721: "0x103416cfCD0D0a32b904Ab4fb69dF6E5B5aaDf2b",  // ✅ Updated NFT
-                erc1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD",   // ✅ Updated ERC1155
-                MockSpender: "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC"
+                erc1155: "0x1f585372f116e1055af2bed81a808ddf9638dccd",   // ✅ Updated ERC1155
+                MockSpender: "0x43c5df0c482c88cef8005389f64c362ee720a5bc"
             }
         },
         1: {

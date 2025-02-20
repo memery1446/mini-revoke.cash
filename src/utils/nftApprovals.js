@@ -1,50 +1,79 @@
-import { ethers, Contract } from "ethers"; // ✅ Updated for Ethers v6
-const ZeroAddress = "0x0000000000000000000000000000000000000000";
+import { ethers } from "ethers";
+import getProvider from "./provider"; // Ensure provider.js exists in utils
+import { CONTRACT_ADDRESSES } from "../constants/abis"; // ✅ Correct import
 
+export async function getERC721Approvals(userAddress, tokenId = 1) {
+    try {
+        const provider = getProvider();
+        const contractAddress = CONTRACT_ADDRESSES.TestNFT;
 
-/** Function to get ERC-721 Approvals */
-export async function getERC721Approvals(nftContractAddress, ownerAddress, provider) {
-    const abi = [
-        "function isApprovedForAll(address owner, address operator) view returns (bool)",
-        "function getApproved(uint256 tokenId) view returns (address)"
-    ];
-    
-    const contract = new Contract(nftContractAddress, abi, provider);
-    const marketplaceAddress = "0x0000000000000000000000000000000000000000"; // Temporary placeholder
+        console.log("🔍 Fetching ERC-721 approvals for contract:", contractAddress);
 
-    const isApprovedForAll = await contract.isApprovedForAll(ownerAddress, marketplaceAddress);
-    console.log(`✅ Global Approval for All: ${isApprovedForAll}`);
+        if (!contractAddress || contractAddress === "0x0000000000000000000000000000000000000000") {
+            throw new Error("🚨 Invalid ERC-721 contract address!");
+        }
 
-    const approvedForToken = await contract.getApproved(1);
-    console.log(`✅ Approved Address for Token ID 1: ${approvedForToken}`);
+        const contract = new ethers.Contract(
+            contractAddress,
+            [
+                "function isApprovedForAll(address owner, address operator) view returns (bool)",
+                "function getApproved(uint256 tokenId) view returns (address)"
+            ],
+            provider
+        );
 
-    return { isApprovedForAll, approvedForToken };
+        const operatorAddress = CONTRACT_ADDRESSES.MockSpender;
+        console.log("📌 Checking approval for operator:", operatorAddress);
+
+        let isApproved = false;
+        try {
+            isApproved = await contract.isApprovedForAll(userAddress, operatorAddress);
+        } catch (error) {
+            console.warn("⚠️ isApprovedForAll call failed, likely due to no approvals set.");
+        }
+
+        let specificApproval = "0x0000000000000000000000000000000000000000";
+        try {
+            specificApproval = await contract.getApproved(tokenId);
+        } catch (error) {
+            console.warn("⚠️ getApproved call failed, possibly no approval set for token ID:", tokenId);
+        }
+
+        console.log("✅ ERC-721 Approval Status:", isApproved || specificApproval !== "0x0000000000000000000000000000000000000000");
+        return isApproved || specificApproval !== "0x0000000000000000000000000000000000000000";
+    } catch (error) {
+        console.error("❌ Error fetching ERC-721 approvals:", error.message);
+        return false;
+    }
 }
 
-/** Function to revoke ERC-721 Approvals */
-export async function revokeERC721Approval(nftContractAddress, tokenId) {
-    const provider = new BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    
-    const abi = ["function approve(address to, uint256 tokenId)"];
-    const contract = new Contract(nftContractAddress, abi, signer);
-
-    const tx = await contract.approve(ZeroAddress, tokenId);
-    await tx.wait();
-    console.log(`✅ Approval revoked for token ${tokenId}`);
+export async function revokeERC721Approval(userAddress) {
+    try {
+        const provider = getProvider();
+        const signer = provider.getSigner();
+        const contractAddress = CONTRACT_ADDRESSES.TestNFT;
+        const nftContract = new ethers.Contract(contractAddress, [
+            "function setApprovalForAll(address operator, bool approved) external"
+        ], signer);
+        
+        const operatorAddress = CONTRACT_ADDRESSES.MockSpender;
+        console.log("🛑 Revoking ERC-721 Approval for:", operatorAddress);
+        
+        const tx = await nftContract.setApprovalForAll(operatorAddress, false);
+        await tx.wait();
+        console.log("✅ ERC-721 Approval Revoked");
+    } catch (error) {
+        console.error("❌ Error revoking ERC-721 approval:", error);
+    }
 }
 
-/** Function to batch revoke ERC-721 approvals */
-export async function batchRevokeERC721Approvals(nftContractAddress, signer, tokenIds) {
-    const abi = ["function batchRevokeApprovals(uint256[] memory tokenIds)"];
-    const contract = new Contract(nftContractAddress, abi, signer);
-
-    console.log("⏳ Revoking multiple ERC-721 approvals...");
-    
-    const tx = await contract.batchRevokeApprovals(tokenIds);
-    await tx.wait();
-
-    console.log(`✅ ERC-721 Approvals Revoked for tokens: ${tokenIds.join(", ")}`);
+export async function batchRevokeERC721Approvals(userAddresses) {
+    try {
+        for (const userAddress of userAddresses) {
+            await revokeERC721Approval(userAddress);
+        }
+    } catch (error) {
+        console.error("❌ Error in batch revocation of ERC-721 approvals:", error);
+    }
 }
-
 
