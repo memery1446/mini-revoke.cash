@@ -1146,6 +1146,38 @@
       "artifacts": [
         "TestNFT"
       ]
+    },
+    "/Users/markemery/mini.revoke/contracts/MockSpender.sol": {
+      "lastModificationDate": 1739883176595,
+      "contentHash": "d41d8cd98f00b204e9800998ecf8427e",
+      "sourceName": "contracts/MockSpender.sol",
+      "solcConfig": {
+        "version": "0.8.28",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [],
+      "artifacts": []
     }
   }
 }
