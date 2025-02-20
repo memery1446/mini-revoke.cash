@@ -1,4 +1,48 @@
 .exit
+console.log("🔍 ERC-1155 Approval Status After Setting:", isApprovedAfter);
+const isApprovedAfter = await erc1155.isApprovedForAll(owner, spender);
+console.log("✅ Approval set for spender:", spender);
+await tx.wait(); // Wait for the transaction to complete
+const tx = await erc1155.setApprovalForAll(spender, true);
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(owner, spender);
+const spender = "0x43c5df0c482c88cef8005389f64c362ee720a5bc";
+const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; 
+const erc1155 = await ethers.getContractAt("TestERC1155", "0x1f585372f116e1055af2bed81a808ddf9638dccd", signer);
+const signer = provider.getSigner(); // ✅ Attach a signer
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+.exit
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(owner, spender);
+const spender = "0x43c5df0c482c88cef8005389f64c362ee720a5bc";
+const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; 
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(owner, spender);
+const erc1155 = await ethers.getContractAt("TestERC1155", "0x1f585372f116e1055af2bed81a808ddf9638dccd", signer);
+const signer = provider.getSigner(); // ✅ Attach a signer
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+ .exit
+const erc1155 = await ethers.getContractAt("TestERC1155", "0x1f585372f116e1055af2bed81a808ddf9638dccd", signer);
+const signer = provider.getSigner(); // ✅ Attach a signer
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(owner, spender);
+const spender = "0x43c5df0c482c88cef8005389f64c362ee720a5bc";
+const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const erc1155 = await ethers.getContractAt("TestERC1155", "0x1f585372f116e1055af2bed81a808ddf9638dccd", provider);
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+npx hardhat console --network localhost
+.exit
+const erc1155 = new ethers.Contract("0x1f585372f116e1055af2bed81a808ddf9638dccd", TestERC1155.abi, provider);
+const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(owner, spender);
+const spender = "0x43c5df0c482c88cef8005389f64c362ee720a5bc"; 
+const owner = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; 
+console.log("🔍 ERC1155 ABI Methods:", erc1155.interface.fragments.map(f => f.name));
+const erc1155 = await ethers.getContractAt("TestERC1155", "YOUR_ERC1155_CONTRACT_ADDRESS");
+console.log("🔍 ERC1155 ABI Methods:", contract.interface.fragments.map(f => f.name));
+.exit
 console.log("Fresh Approval After Revoking:", freshApproval);
 freshApproval = await nft.isApprovedForAll(owner, spender);
 await nft.setApprovalForAll(spender, false);
