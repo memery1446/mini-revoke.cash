@@ -5,7 +5,7 @@ const web3Slice = createSlice({
   initialState: {
     account: null,
     network: null,
-    approvals: [], // New state to store approvals
+    approvals: [],
   },
   reducers: {
     setAccount: (state, action) => {
@@ -17,22 +17,25 @@ const web3Slice = createSlice({
     resetWeb3: (state) => {
       state.account = null;
       state.network = null;
-      state.approvals = []; // Reset approvals on reset
+      state.approvals = [];
     },
     addApproval: (state, action) => {
-      // Add approval to the approvals array
-      state.approvals.push(action.payload);
+      // Prevent duplicates
+      const exists = state.approvals.find(
+        (a) => a.token === action.payload.token && a.spender === action.payload.spender
+      );
+      if (!exists) {
+        state.approvals.push(action.payload);
+      }
     },
     removeApproval: (state, action) => {
-      // Remove approval from the approvals array
       state.approvals = state.approvals.filter(
-        (approval) => approval.token !== action.payload.token
+        (approval) =>
+          !(approval.token === action.payload.token && approval.spender === action.payload.spender)
       );
     },
   },
 });
 
-// Export actions
 export const { setAccount, setNetwork, resetWeb3, addApproval, removeApproval } = web3Slice.actions;
-
 export default web3Slice.reducer;
