@@ -1,43 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import React, { useEffect, useState } from "react"; // Import React and Hooks
+import { getERC1155Approvals } from "../utils/erc1155Approvals"; // Importing the function to get approvals
 
-const ERC1155Approvals = ({ contractAddress }) => {
-  const [approvals, setApprovals] = useState(null);
+const ERC1155Approvals = ({ contractAddress, owner }) => {
+    const [approvals, setApprovals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (contractAddress && window.ethereum) {
-      fetchApprovalStatus();
-    }
-  }, [contractAddress]);
+    useEffect(() => {
+        const fetchApprovals = async () => {
+            try {
+                // Log the contract address and owner before proceeding
+                console.log("Fetching approvals using contract address:", contractAddress);
+                console.log("Fetching approvals for owner:", owner);
 
-  const fetchApprovalStatus = async () => {
-    try {
-      console.log("🔍 Fetching ERC-1155 approvals for contract:", contractAddress);
-      if (!contractAddress) throw new Error("❌ Contract address is missing!");
+                if (!contractAddress || !owner) {
+                    throw new Error("Missing contract address or owner address");
+                }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const abi = ["function isApprovedForAll(address owner, address operator) view returns (bool)"];
-      const contract = new ethers.Contract(contractAddress, abi, signer);
+                const approvalsData = await getERC1155Approvals(owner); // Call with owner
+                setApprovals(approvalsData || []);
+            } catch (err) {
+                console.error("❌ Error fetching ERC-1155 approvals:", err.message);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-      const isApprovedForAll = await contract.isApprovedForAll(
-        await signer.getAddress(),
-        "0x0000000000000000000000000000000000000000"
-      );
+        fetchApprovals();
+    }, [contractAddress, owner]);
 
-      console.log("✅ ERC-1155 Approvals:", isApprovedForAll);
-      setApprovals(isApprovedForAll);
-    } catch (error) {
-      console.error("❌ Error fetching ERC-1155 approvals:", error);
-    }
-  };
-
-  return (
-    <div>
-      <h3>ERC-1155 Approvals</h3>
-      <p>{approvals !== null ? `Approved: ${approvals}` : "Fetching..."}</p>
-    </div>
-  );
+    return (
+        <div>
+            <h3>ERC-1155 Approvals</h3>
+            {loading ? (
+                <p>Loading approvals...</p>
+            ) : error ? (
+                <p style={{ color: "red" }}>Error: {error}</p>
+            ) : approvals.length === 0 ? (
+                <p>No approvals found.</p>
+            ) : (
+                <ul>
+                    {approvals.map((approval, index) => (
+                        <li key={index}>
+                            Spender: {approval.spender} | Approved: {approval.isApproved ? "✅" : "❌"}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
 };
 
-export default ERC1155Approvals;
+export default ERC1155Approvals; 

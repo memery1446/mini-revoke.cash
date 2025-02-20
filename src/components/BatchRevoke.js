@@ -14,7 +14,7 @@ export async function batchRevokeERC20Approvals(tokenContracts, signer) {
 
         try {
             const contract = new ethers.Contract(tokenAddress, abi, signer);
-            const tx = await contract.approve("0x0000000000000000000000000000000000000000", 0);
+            const tx = await contract.approve("0x43c5df0c482c88cef8005389f64c362ee720a5bc", 0);
             await tx.wait();
             console.log(`✅ Revoked approval for ${tokenAddress}`);
         } catch (error) {

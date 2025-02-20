@@ -1,4 +1,16 @@
 .exit
+console.log("🔍 ERC-1155 Approval Status:", isApproved);
+const isApproved = await erc1155.isApprovedForAll(ownerAddress, spenderAddress);
+console.log("Owner Address:", ownerAddress);
+console.log("Spender Address:", spenderAddress);
+console.log("Contract Address:", contractAddress);
+const spenderAddress = "0x43c5df0c482c88cef8005389f64c362ee720a5bc"; // The spender
+const ownerAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // Your wallet address
+const contractAddress = "0x1f585372f116e1055af2bed81a808ddf9638dccd"; // Your ERC-1155 contract
+console.log("Owner Address:", ownerAddress);
+console.log("Spender Address:", spenderAddress);
+console.log("Contract Address:", contractAddress);
+.exit
 console.log("🔍 ERC-1155 Approval Status After Setting:", isApprovedAfter);
 const isApprovedAfter = await erc1155.isApprovedForAll(owner, spender);
 console.log("✅ Approval set for spender:", spender);

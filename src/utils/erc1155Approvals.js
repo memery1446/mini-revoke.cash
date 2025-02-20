@@ -1,62 +1,97 @@
-import { ethers } from "ethers";
-import getProvider from "./provider"; // Ensure provider.js exists in utils
-import { CONTRACT_ADDRESSES } from "../constants/abis"; // ✅ Correct import
+import { ethers } from "ethers"; // Import ethers library
+import getProvider from "../utils/provider"; // Importing the default export
+import { ERC1155_ABI, CONTRACT_ADDRESSES } from "../constants/abis"; // Importing ABIs and addresses
 
-export async function getERC1155Approvals(userAddress) {
+const provider = getProvider(); // Get the provider
+const erc1155Contract = new ethers.Contract(
+    CONTRACT_ADDRESSES.ERC1155, // Ensure this points to the ERC1155 contract address
+    ERC1155_ABI, // Ensure this is the correct ABI for the ERC1155 contract
+    provider
+);
+
+/**
+ * Fetch ERC-1155 approvals for a given owner address.
+ * @param {string} ownerAddress - The address of the token owner.
+ * @returns {Promise<Array>} - A promise that resolves to an array of approvals.
+ */
+const getERC1155Approvals = async (ownerAddress) => {
     try {
-        const provider = getProvider();
-        const contractAddress = CONTRACT_ADDRESSES.TestERC1155;
+        console.log("🔍 Fetching ERC-1155 approvals for owner:", ownerAddress);
 
-        console.log("🔍 Fetching ERC-1155 approvals for contract:", contractAddress);
+        const spenderAddresses = [
+            CONTRACT_ADDRESSES.MockSpender // Ensure this spender address is valid
+        ];
 
-        if (!contractAddress || contractAddress === "0x0000000000000000000000000000000000000000") {
-            throw new Error("🚨 Invalid ERC-1155 contract address!");
+        let approvals = [];
+        for (let spender of spenderAddresses) {
+            console.log("Checking approval for spender:", spender); // Log each spender
+
+            // Check for valid addresses before calling
+            if (!ethers.utils.isAddress(ownerAddress) || !ethers.utils.isAddress(spender)) {
+                console.error("❌ Invalid address provided:", { ownerAddress, spender });
+                return []; // Exit if invalid
+            }
+
+            const isApproved = await erc1155Contract.isApprovedForAll(ownerAddress, spender);
+            approvals.push({ spender, isApproved });
         }
 
-        const contract = new ethers.Contract(
-            contractAddress,
-            ["function isApprovedForAll(address owner, address operator) view returns (bool)"],
-            provider
-        );
-
-        const operatorAddress = CONTRACT_ADDRESSES.MockSpender;
-        console.log("📌 Checking approval for operator:", operatorAddress);
-
-        const isApproved = await contract.isApprovedForAll(userAddress, operatorAddress);
-        console.log("✅ ERC-1155 Approval Status:", isApproved);
-        return isApproved;
+        return approvals;
     } catch (error) {
-        console.error("❌ Error fetching ERC-1155 approvals:", error.message);
-        return false;
+        console.error("❌ Error fetching ERC-1155 approvals:", error);
+        return []; // Return an empty array in case of an error
     }
-}
+};
 
-export async function revokeERC1155Approval(userAddress) {
+/**
+ * Revoke approval for a specific ERC-1155 spender address.
+ * @param {string} spenderAddress - The address of the spender to revoke approval for.
+ * @returns {Promise<boolean>} - A promise that resolves to true if revoked successfully, or false.
+ */
+async function revokeERC1155Approval(spenderAddress) {
     try {
-        const provider = getProvider();
+        console.log("🚨 Revoking approval for ERC-1155 spender:", spenderAddress);
         const signer = provider.getSigner();
-        const contractAddress = CONTRACT_ADDRESSES.TestERC1155;
-        const erc1155 = new ethers.Contract(contractAddress, [
-            "function setApprovalForAll(address operator, bool approved) external"
-        ], signer);
-        
-        const operatorAddress = CONTRACT_ADDRESSES.MockSpender;
-        console.log("🛑 Revoking ERC-1155 Approval for:", operatorAddress);
-        
-        const tx = await erc1155.setApprovalForAll(operatorAddress, false);
-        await tx.wait();
-        console.log("✅ ERC-1155 Approval Revoked");
+        const contractWithSigner = erc1155Contract.connect(signer);
+
+        const tx = await contractWithSigner.setApprovalForAll(spenderAddress, false);
+        await tx.wait(); // Wait for transaction confirmation
+
+        console.log("✅ Approval revoked successfully.");
+        return true;
     } catch (error) {
         console.error("❌ Error revoking ERC-1155 approval:", error);
+        return false; // Return false in case of an error
     }
 }
 
-export async function batchRevokeERC1155Approvals(userAddresses) {
+/**
+ * Batch revoke approvals for multiple ERC-1155 spender addresses.
+ * @param {Array<string>} spenderAddresses - The array of addresses to revoke approval for.
+ * @returns {Promise<boolean>} - A promise that resolves to true if all approvals are revoked successfully, or false.
+ */
+async function batchRevokeERC1155Approvals(spenderAddresses) {
     try {
-        for (const userAddress of userAddresses) {
-            await revokeERC1155Approval(userAddress);
+        console.log("🚨 Revoking approvals for multiple ERC-1155 spenders:", spenderAddresses);
+        const signer = provider.getSigner();
+        const contractWithSigner = erc1155Contract.connect(signer);
+
+        for (let spender of spenderAddresses) {
+            if (!ethers.utils.isAddress(spender)) {
+                console.error(`❌ Invalid spender address: ${spender}`);
+                continue; // Skip if invalid
+            }
+            const tx = await contractWithSigner.setApprovalForAll(spender, false);
+            await tx.wait(); // Wait for transaction confirmation
         }
+
+        console.log("✅ Batch approval revocations successful.");
+        return true;
     } catch (error) {
-        console.error("❌ Error in batch revocation of ERC-1155 approvals:", error);
+        console.error("❌ Error in batch revoking ERC-1155 approvals:", error);
+        return false; // Return false in case of an error
     }
 }
+
+// Ensure all functions are exported properly
+export { getERC1155Approvals, revokeERC1155Approval, batchRevokeERC1155Approvals };
