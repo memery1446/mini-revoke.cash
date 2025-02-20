@@ -6,13 +6,11 @@ import { ethers } from "ethers";
 import { CONTRACT_ADDRESSES, TOKEN_ABI } from "../constants/abis";
 import { getERC20Approvals } from "../utils/erc20Approvals";
 
-
 const ApprovalDashboard = ({ wallet, contractAddresses }) => {
     const [approvals, setApprovals] = useState([]);
     const [selectedApprovals, setSelectedApprovals] = useState([]);
 
     useEffect(() => {
-        // Load approvals when component mounts
         fetchApprovals();
     }, []);
 
@@ -36,12 +34,11 @@ const ApprovalDashboard = ({ wallet, contractAddresses }) => {
         await batchRevokeERC721Approvals(contractAddresses.erc721, selectedApprovals.filter(a => a.type === "ERC-721").map(a => a.tokenId));
         await batchRevokeERC1155Approvals(contractAddresses.erc1155);
         alert("Batch revocation complete!");
-        fetchApprovals(); // Refresh approvals
+        fetchApprovals();
     };
 
     const handleRevokeSingle = async (approval) => {
         console.log(`🚨 Revoking approval for ${approval.contract}...`);
-
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
@@ -50,8 +47,7 @@ const ApprovalDashboard = ({ wallet, contractAddresses }) => {
             const tx = await tokenContract.approve(approval.spender, 0);
             await tx.wait();
             console.log("✅ Single approval revoked!");
-
-            fetchApprovals(); // Refresh approvals after revocation
+            fetchApprovals();
         } catch (error) {
             console.error("❌ Error revoking approval:", error);
             alert("Error revoking approval: " + error.message);
@@ -61,7 +57,6 @@ const ApprovalDashboard = ({ wallet, contractAddresses }) => {
     return (
         <div>
             <h2>Approval Dashboard</h2>
-
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -70,29 +65,34 @@ const ApprovalDashboard = ({ wallet, contractAddresses }) => {
                         <th>Type</th>
                         <th>Spender</th>
                         <th>Approved Amount</th>
-                        <th>Action</th> {/* New Column for Revoke Button */}
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {approvals.map((approval, index) => (
-                        <tr key={index}>
-                            <td>
-                                <input type="checkbox" onChange={() => handleSelectApproval(approval)} />
-                            </td>
-                            <td>{approval.contract}</td>
-                            <td>{approval.type}</td>
-                            <td>{approval.spender}</td>
-                            <td>{approval.amount}</td>
-                            <td>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleRevokeSingle(approval)}>
-                                    🚨 Revoke
-                                </button>
-                            </td>
+                    {approvals.length > 0 ? (
+                        approvals.map((approval, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <input type="checkbox" onChange={() => handleSelectApproval(approval)} />
+                                </td>
+                                <td>{approval.contract}</td>
+                                <td>{approval.type}</td>
+                                <td>{approval.spender}</td>
+                                <td>{approval.amount}</td>
+                                <td>
+                                    <button className="btn btn-danger btn-sm" onClick={() => handleRevokeSingle(approval)}>
+                                        🚨 Revoke
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="6" style={{ textAlign: "center" }}>No approvals found</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
-
             {selectedApprovals.length > 0 && (
                 <button className="btn btn-warning" onClick={handleBatchRevoke}>
                     🚨 Revoke Selected Approvals
@@ -103,5 +103,4 @@ const ApprovalDashboard = ({ wallet, contractAddresses }) => {
 };
 
 export default ApprovalDashboard;
-
 
