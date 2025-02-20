@@ -24,6 +24,9 @@ export async function getERC721Approvals(userAddress, tokenId = 1) {
 
         const operatorAddress = CONTRACT_ADDRESSES.MockSpender;
         console.log("📌 Checking approval for operator:", operatorAddress);
+console.log("🔍 Fetching ERC-721 approvals for contract:", contractAddress);
+console.log("📌 Checking approval for user:", userAddress);
+console.log("📌 Checking approval for operator:", operatorAddress);
 
         let isApproved = false;
         try {

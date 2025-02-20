@@ -11,6 +11,13 @@ contract TestNFT is ERC721 {
     }
 
     /**
+     * @dev Explicitly override OpenZeppelin's function to ensure ABI includes it.
+     */
+    function isApprovedForAll(address owner, address operator) public view override returns (bool) {
+        return super.isApprovedForAll(owner, operator);
+    }
+
+    /**
      * @dev Allows the owner to batch revoke approvals for multiple token IDs.
      */
     function batchRevokeApprovals(uint256[] memory tokenIds) external {
@@ -20,3 +27,4 @@ contract TestNFT is ERC721 {
         }
     }
 }
+
