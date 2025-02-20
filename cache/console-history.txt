@@ -1,0 +1,127 @@
+console.log(await erc20.interface.fragments.map(f => f.name));
+console.log("🔍 Checking Contract ABI Methods:");
+);
+    "0xd544d7A5EF50c510f3E90863828EAba7E392907A" // TK2 Address
+    "contracts/TestToken.sol:TestToken", // Replace with your ERC-20 contract name
+const erc20 = await ethers.getContractAt(
+console.log("🔍 Allowance:", allowance.toString());
+const allowance = await erc20.allowance(userAddress, spender);
+const spender = "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC";
+const userAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+);
+    "0xd544d7A5EF50c510f3E90863828EAba7E392907A" // TK2 Address
+    "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20",
+const erc20 = await ethers.getContractAt(
+console.log("🔍 Contract Code:", code);
+const code = await ethers.provider.getCode(erc20TokenAddress);
+const erc20TokenAddress = "0xd544d7A5EF50c510f3E90863828EAba7E392907A"; // TK2 Address
+const { ethers } = require("hardhat");
+.exit
+console.log("🔍 Redux Network:", store.getState().web3.network);
+console.log("🔍 Contract Code:", code);
+const code = await ethers.provider.getCode("0xeF66010868Ff77119171628B7eFa0F6179779375");
+console.log("🔍 Allowance:", allowance.toString());
+const allowance = await erc20.allowance(userAddress, spender);
+);
+    provider
+    ["function allowance(address owner, address spender) view returns (uint256)"],
+    erc20TokenAddress,
+const erc20 = new ethers.Contract(
+const spender = "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC";
+const userAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; 
+const erc20TokenAddress = "0xeF66010868Ff77119171628B7eFa0F6179779375";
+const provider = ethers.provider;
+const { ethers } = require("hardhat");
+console.log("🔍 Redux Approvals:", store.getState().web3.approvals);
+console.log("🔍 Redux Network ID:", store.getState().web3.network);
+console.log("🔍 Redux Wallet Address:", store.getState().web3.account);
+console.log("🔍 Allowance:", allowance.toString());
+const allowance = await erc20.allowance(userAddress, spender);
+const erc20 = new ethers.Contract(erc20TokenAddress, ["function allowance(address owner, address spender) view returns (uint256)"], provider);
+const spender = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"; // The spender in error
+const userAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"; // Your connected wallet
+const erc20TokenAddress = "0xeF66010868Ff77119171628B7eFa0F6179779375"; // TK1 from CONTRACT_ADDRESSES
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+const { ethers } = require("hardhat");
+console.log(CONTRACT_ADDRESSES);
+const { CONTRACT_ADDRESSES } = require("./src/constants/abis.js");
+console.log(fs.readdirSync("./src/constants"));
+const fs = require("fs");
+console.log("🔍 ERC-20 Token Addresses:", CONTRACT_ADDRESSES.TK1, CONTRACT_ADDRESSES.TK2);
+.exit
+console.log("❌ ERC-1155 Approval Revoked");
+await erc1155.setApprovalForAll(spender, false);
+console.log("❌ ERC-721 Approval Revoked");
+await erc721.setApprovalForAll(spender, false);
+console.log("✅ ERC-1155 Approval Granted");
+await erc1155.setApprovalForAll(spender, true);
+);
+    user
+    erc1155TokenAddress,
+    "@openzeppelin/contracts/token/ERC1155/IERC1155.sol:IERC1155",
+const erc1155 = await ethers.getContractAt(
+const erc1155TokenAddress = CONTRACT_ADDRESSES.TestERC1155;
+console.log("✅ ERC-721 Approval Granted");
+await erc721.setApprovalForAll(spender, true);
+);
+    user
+    erc721TokenAddress,
+    "@openzeppelin/contracts/token/ERC721/IERC721.sol:IERC721",
+const erc721 = await ethers.getContractAt(
+const erc721TokenAddress = CONTRACT_ADDRESSES.TestNFT;
+console.log("❌ ERC-20 Approval Revoked");
+await erc20.approve(spender, 0);
+console.log("❌ ERC-20 Approval Revoked");
+await erc20.approve(spender, 0);
+console.log("❌ ERC-20 Approval Revoked");
+await erc20.approve(spender, 0);
+console.log("❌ ERC-20 Approval Revoked");
+await erc20.approve(spender, 0);
+console.log("🔍 ERC-20 Allowance:", ethers.utils.formatUnits(allowance, 18));
+const allowance = await erc20.allowance(user.address, spender);
+console.log("✅ ERC-20 Approval Granted");
+await erc20.approve(spender, amount);
+const amount = ethers.utils.parseUnits("100", 18);
+const spender = CONTRACT_ADDRESSES.MockSpender;
+);
+    user
+    erc20TokenAddress,
+    "@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20",
+const erc20 = await ethers.getContractAt(
+const user = signers[1];
+const signers = await ethers.getSigners();
+const { ethers } = require("hardhat");
+console.log("🎯 Using ERC-20 Token:", erc20TokenAddress);
+const erc20TokenAddress = CONTRACT_ADDRESSES.TK1;
+console.log(CONTRACT_ADDRESSES);
+const { CONTRACT_ADDRESSES } = require("./src/constants/abis.js");
+console.log(CONTRACT_ADDRESSES);
+const { CONTRACT_ADDRESSES } = require("./src/constants/abis.js");
+console.log(fs.readdirSync("./src/constants"));
+console.log(fs.readdirSync("./"));
+const fs = require("fs");
+console.log(fs.readdirSync("./"));
+const fs = require("fs");
+const { CONTRACT_ADDRESSES } = require("./constants/abis");
+const { ethers } = require("hardhat");
+.exit
+clear
+const amount = ethers.utils.parseUnits("100", 18);
+console.log("🔍 ERC-20 Allowance:", ethers.formatUnits(allowance, 18));
+const allowance = await erc20.allowance(user.address, spender);
+console.log("✅ ERC-20 Approval Granted");
+await erc20.approve(spender, amount);
+const erc20 = await ethers.getContractAt("IERC20", erc20TokenAddress, user);
+const amount = ethers.parseUnits("100", 18); // Approving 100 tokens
+const spender = mockSpenderAddress; // The MockSpender contract itself
+const erc20TokenAddress = "0xYourERC20TokenAddressHere";
+const mockSpender = await MockSpender.attach(mockSpenderAddress);
+const MockSpender = await ethers.getContractFactory("MockSpender");
+console.log("User:", user.address);
+console.log("Deployer:", deployer.address);
+const user = signers[1]; // A different test account
+const deployer = signers[0]; // The first account (deployer)
+const signers = await ethers.getSigners();
+console.log("Using MockSpender at:", mockSpenderAddress);
+const mockSpenderAddress = require("./deployed-mock-spender.json").address;
+const { ethers } = require("hardhat");

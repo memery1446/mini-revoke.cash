@@ -1,19 +1,23 @@
 import { ethers } from "ethers";
-import { CONTRACT_ADDRESSES } from "../constants/abis"; // Adjust the import path as per your project structure
+import { CONTRACT_ADDRESSES, TOKEN_ABI } from "../../src/constants/abis"; // ✅ Fixed import structure
+
+// ✅ Ensure the correct provider is always used
+const provider = window.ethereum
+    ? new ethers.providers.Web3Provider(window.ethereum)
+    : new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); // ✅ Fallback to localhost
 
 /** Function to get ERC-20 Approvals */
-export async function getERC20Approvals(tokenContracts, ownerAddress, provider) {
-    const abi = ["function allowance(address owner, address spender) view returns (uint256)"];
+export async function getERC20Approvals(tokenContracts, ownerAddress, passedProvider = provider) {
     let approvals = [];
 
-    // Assuming you want to use the deployed token contracts for approvals
+    // ✅ List of spender addresses to check
     const spenderAddresses = [
-        CONTRACT_ADDRESSES.TK1, // Adding the token address itself or other valid spender addresses as needed
-        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" // This can stay as the test wallet
+        CONTRACT_ADDRESSES.TK1, // ✅ Token contract itself
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" // ✅ Test wallet
     ];
 
     try {
-        // Validate owner address
+        // ✅ Validate the owner address
         if (!ethers.utils.isAddress(ownerAddress)) {
             throw new Error(`Invalid owner address: ${ownerAddress}`);
         }
@@ -27,8 +31,8 @@ export async function getERC20Approvals(tokenContracts, ownerAddress, provider) 
                 continue;
             }
 
-            // Create contract instance with the provider
-            const contract = new ethers.Contract(tokenAddress, abi, provider); 
+            // ✅ Create contract instance with the correct provider
+            const contract = new ethers.Contract(tokenAddress, TOKEN_ABI, passedProvider);
 
             for (let spender of spenderAddresses) {
                 console.log(`🛠️ Checking allowance for spender: ${spender}`);

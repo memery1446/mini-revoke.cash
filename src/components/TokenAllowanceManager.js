@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { ethers } from "ethers"; // ✅ Corrected import
+import { ethers } from "ethers";
 import { CONTRACT_ADDRESSES, TOKEN_ABI } from "../constants/abis";
 
 const TokenAllowanceManager = ({ wallet }) => {
   const [spender, setSpender] = useState("");
   const [allowance, setAllowance] = useState(null);
   const [selectedToken, setSelectedToken] = useState(CONTRACT_ADDRESSES.TK1);
-  const [customAmount, setCustomAmount] = useState(""); // ✅ Allow users to set an amount
+  const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // ✅ Ensure the correct provider is always used
+  const provider = window.ethereum
+    ? new ethers.providers.Web3Provider(window.ethereum)
+    : new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); // ✅ Fallback to localhost
 
   useEffect(() => {
     if (wallet && selectedToken && spender) {
@@ -20,15 +25,18 @@ const TokenAllowanceManager = ({ wallet }) => {
     try {
       console.log("🔍 Checking allowance...");
       if (!wallet || !selectedToken || !spender) {
+        console.error("❌ Missing wallet, selectedToken, or spender:", {
+          wallet,
+          selectedToken,
+          spender,
+        });
         alert("Please ensure wallet is connected and spender is set.");
         return;
       }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum); // ✅ Use ethers.providers.Web3Provider
       const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, provider);
-
       const value = await tokenContract.allowance(wallet, spender);
-      setAllowance(ethers.utils.formatUnits(value, 18)); // ✅ Corrected formatUnits usage
+      setAllowance(ethers.utils.formatUnits(value, 18));
       console.log("✅ Allowance fetched:", ethers.utils.formatUnits(value, 18));
     } catch (err) {
       console.error("❌ Error fetching allowance:", err);
@@ -45,17 +53,17 @@ const TokenAllowanceManager = ({ wallet }) => {
       console.log(`🚀 Requesting token approval for ${customAmount} tokens...`);
       setLoading(true);
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const signer = provider.getSigner(); // ✅ Ensure the transaction is signed
       const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, signer);
 
-      const tx = await tokenContract.approve(spender, ethers.utils.parseUnits(customAmount, 18)); // ✅ Corrected parseUnits usage
+      const tx = await tokenContract.approve(spender, ethers.utils.parseUnits(customAmount, 18));
       await tx.wait();
       console.log("✅ Token approval confirmed!");
 
       checkAllowance();
     } catch (error) {
       console.error("❌ Error setting allowance:", error);
+      alert("❌ Error: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -69,8 +77,7 @@ const TokenAllowanceManager = ({ wallet }) => {
         return;
       }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const signer = provider.getSigner(); // ✅ Ensure the transaction is signed
       const tokenContract = new ethers.Contract(selectedToken, TOKEN_ABI, signer);
 
       const tx = await tokenContract.approve(spender, 0);
@@ -89,10 +96,7 @@ const TokenAllowanceManager = ({ wallet }) => {
       {wallet ? (
         <>
           <h3 className="text-primary">Wallet Connected: {wallet}</h3>
-          <select
-            className="form-select my-2"
-            onChange={(e) => setSelectedToken(e.target.value)}
-          >
+          <select className="form-select my-2" onChange={(e) => setSelectedToken(e.target.value)}>
             <option value={CONTRACT_ADDRESSES.TK1}>Test Token 1 (TK1)</option>
             <option value={CONTRACT_ADDRESSES.TK2}>Test Token 2 (TK2)</option>
           </select>
@@ -108,7 +112,6 @@ const TokenAllowanceManager = ({ wallet }) => {
             🔄 Refresh Allowance
           </button>
 
-          {/* ✅ New: User-defined amount for approval */}
           <input
             type="number"
             className="form-control my-2"

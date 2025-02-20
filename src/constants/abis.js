@@ -11,8 +11,8 @@ module.exports = {
         TK1: "0xeF66010868Ff77119171628B7eFa0F6179779375",  // ✅ Updated TK1
         TK2: "0xd544d7A5EF50c510f3E90863828EAba7E392907A",  // ✅ Updated TK2
         TestNFT: "0x103416cfCD0D0a32b904Ab4fb69dF6E5B5aaDf2b",  // ✅ Updated NFT
-        TestERC1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD"  // ✅ Updated ERC1155
-        MockSpender: "0xYourDeployedMockSpenderAddress"
+        TestERC1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD",  // ✅ Updated ERC1155
+        MockSpender: "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC"
     },
 
     NETWORK_CONFIG: {
@@ -23,8 +23,8 @@ module.exports = {
                 tokenManager: "0xeF66010868Ff77119171628B7eFa0F6179779375",  // ✅ TK1
                 secondToken: "0xd544d7A5EF50c510f3E90863828EAba7E392907A",  // ✅ TK2
                 erc721: "0x103416cfCD0D0a32b904Ab4fb69dF6E5B5aaDf2b",  // ✅ Updated NFT
-                erc1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD"   // ✅ Updated ERC1155
-                MockSpender: "0xYourDeployedMockSpenderAddress"
+                erc1155: "0x1F585372F116E1055AF2bED81a808DDf9638dCCD",   // ✅ Updated ERC1155
+                MockSpender: "0x43c5DF0c482c88Cef8005389F64c362eE720A5bC"
             }
         },
         1: {

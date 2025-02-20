@@ -8,15 +8,25 @@ import { addApproval as addApprovalAction, removeApproval as removeApprovalActio
 const ExistingApprovals = () => {
     const dispatch = useDispatch();
     const account = useSelector((state) => state.web3.account);
-    const provider = window.ethereum ? new ethers.providers.Web3Provider(window.ethereum) : null;
+    const provider = window.ethereum
+    ? new ethers.providers.Web3Provider(window.ethereum)
+    : new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545"); // ✅ Ensure localhost provider
+
     const approvals = useSelector((state) => state.web3.approvals); // Access current approvals
     const [fetchedApprovals, setFetchedApprovals] = useState([]);
 
-    useEffect(() => {
-        if (approvals.length === 0) { // Only fetch if no approvals in store
-            fetchApprovals();
-        }
-    }, [account]);
+useEffect(() => {
+    if (!account) {
+        console.log("⏳ Waiting for Redux to update account...");
+        return;
+    }
+
+    if (approvals.length === 0) { 
+        console.log("🔄 Fetching approvals now...");
+        fetchApprovals();
+    }
+}, [account, approvals]);
+
 
     const fetchApprovals = async () => {
         try {
